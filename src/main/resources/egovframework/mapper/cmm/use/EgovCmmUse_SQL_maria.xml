@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:39 KST 2016-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CmmUseDAO">
+
+	<resultMap id="CmmCodeDetail" type="egovframework.com.cmm.service.CmmnDetailCode">
+		<result property="codeId" column="CODE_ID"/>
+		<result property="code" column="CODE"/>
+		<result property="codeNm" column="CODE_NM"/>
+		<result property="codeDc" column="CODE_DC"/>
+	</resultMap>
+
+	<select id="selectCmmCodeDetail" parameterType="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+		 
+			SELECT 
+			CODE_ID, CODE, CODE_NM, CODE_DC
+			FROM 
+			COMTCCMMNDETAILCODE
+			WHERE
+			USE_AT = 'Y'
+			AND CODE_ID = #{codeId}
+		
+	</select>
+
+	<select id="selectHierarchicalCmmCodeDetail" parameterType="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+		WITH RECURSIVE CodeHierarchy AS (
+			SELECT
+				CODE,
+				CODE_NM,
+				CAST(CODE_NM AS CHAR(255)) AS CODE_DC,  -- 초기 경로 설정
+				1 AS LEVEL
+			FROM JAIO.COMTCCMMNDETAILCODE
+			WHERE CODE = #{codeId}  -- 시작 조건
+			  AND USE_AT = 'Y'
+
+			UNION ALL
+
+			SELECT
+				c.CODE,
+				c.CODE_NM,
+				CONCAT(ch.CODE_DC, ' > ', c.CODE_NM) AS CODE_DC,  -- 경로 추가
+				ch.LEVEL + 1 AS LEVEL
+			FROM JAIO.COMTCCMMNDETAILCODE c
+					 INNER JOIN CodeHierarchy ch ON c.P_CODE_ID = ch.CODE
+			WHERE c.USE_AT = 'Y'
+		)
+		SELECT
+			CODE,
+			CODE_NM,
+			CODE_DC
+		FROM CodeHierarchy
+		WHERE LEVEL = 3;  -- 원하는 레벨 조건
+	</select>
+
+
+
+
+</mapper>
