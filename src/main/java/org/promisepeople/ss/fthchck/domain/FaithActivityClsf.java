@@ -11,12 +11,11 @@ import java.util.List;
 /**
  * 신앙_활동
  */
-@Entity
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Builder
-@ToString
+@Entity
 @Table(name = "TBL_FTH_ACTV_CLSF")
 public class FaithActivityClsf {
 
@@ -25,7 +24,7 @@ public class FaithActivityClsf {
 	 */
 	@Id
 	@Column(name = "FTH_ACTV_CLSF_CD")
-	private Long fthActvClsfCd;
+	private Integer fthActvClsfCd;
 
 	/**
 	 * 신앙_활동_분류_명
@@ -43,7 +42,6 @@ public class FaithActivityClsf {
 	 * 신앙 활동 목록
 	 */
 	@OneToMany(mappedBy = "classification")
-	@Builder.Default
 	private List<FaithActivity> activityList = new ArrayList<>(0);
 
 }

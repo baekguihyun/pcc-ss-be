@@ -6,16 +6,17 @@ import org.promisepeople.ss.fthchck.domain.convert.BooleanToYNConverter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 회원
  */
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@Entity
 @Table(name = "TBL_MBR",
 	indexes = {
 		@Index(name = "UNIQ_USERNAME", columnList = "USERNAME"),
@@ -29,6 +30,7 @@ public class Member {
 	 */
 	@Id
 	@Column(name = "MBR_ID")
+	@EqualsAndHashCode.Include
 	private Long mbrId;
 
 	/**
@@ -116,5 +118,8 @@ public class Member {
 	 */
 	@Column(name = "UPDT_DT")
 	private LocalDateTime updtDt;
+
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+	List<FaithCheck> faithCheckList = new ArrayList<>();
 
 }

@@ -8,10 +8,10 @@ import lombok.*;
 /**
  * 회원_학부모
  */
-@Entity
-@NoArgsConstructor
 @Getter
+@Setter
 @ToString
+@Entity
 @Table(name = "TBL_MBR_PARENT")
 @PrimaryKeyJoinColumn(name = "PARENT_ID")
 public class MemberParent extends Member {

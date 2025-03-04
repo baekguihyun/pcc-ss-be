@@ -10,12 +10,10 @@ import java.util.List;
 /**
  * 소그룹
  */
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Builder
-@ToString
+@Entity
 @Table(name = "TBL_SGRP", indexes = {
 	@Index(name = "FK_tbl_sgrp_tbl_dept", columnList = "DEPT_CD"),
 	@Index(name = "FK_tbl_sgrp_tbl_mbr_tchr", columnList = "TCHR_ID")
@@ -79,7 +77,6 @@ public class SmallGroup {
 	@Convert(converter = BooleanToYNConverter.class)
 	private Boolean useYn = true;
 
-	@Builder.Default
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup")
 	private List<SmallGroupFrmt> sgrpFrmtList = new ArrayList<>(0);
 }

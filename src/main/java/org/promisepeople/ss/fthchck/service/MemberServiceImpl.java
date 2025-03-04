@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.promisepeople.ss.fthchck.domain.Member;
 import org.promisepeople.ss.fthchck.domain.MemberStudent;
-import org.promisepeople.ss.fthchck.domain.SmallGroup;
 import org.promisepeople.ss.fthchck.dto.MbrSignUpDTO;
 import org.promisepeople.ss.fthchck.dto.MbrSearchDTO;
 import org.promisepeople.ss.fthchck.dto.MemberDTO;

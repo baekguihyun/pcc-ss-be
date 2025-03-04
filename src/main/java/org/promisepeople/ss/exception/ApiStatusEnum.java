@@ -59,6 +59,16 @@ public enum ApiStatusEnum {
 	LOGIN_FAIL(HttpStatus.OK, "7","로그인 실패", "LOGIN_FAIL_ERROR"),
 
 	/**
+	 * 권한 없음 (CODE 8)
+	 */
+	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "8","권한 없음", "UNAUTHORIZED"),
+
+	/**
+	 * 권한 없음 (CODE 9)
+	 */
+	FAILED_CHECK_JWT(HttpStatus.OK, "9","JWT 검사 실패", "FAILED_CHECK_JWT"),
+
+	/**
 	 * 잘못된 요청 파라미터 에러(CODE 10)
 	 */
 	INVALID_REQUEST_PARAMETER_ERROR(HttpStatus.BAD_REQUEST, "10", "잘못된 요청 파라미터 에러", "INVALID_REQUEST_PARAMETEER_ERROR"),

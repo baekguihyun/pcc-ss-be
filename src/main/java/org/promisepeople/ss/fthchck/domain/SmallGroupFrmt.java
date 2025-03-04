@@ -7,12 +7,10 @@ import lombok.*;
 /**
     소그룹_편성
  */
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Builder
-@ToString
+@Entity
 @Table(name = "TBL_SGRP_FRMT")
 public class SmallGroupFrmt {
 

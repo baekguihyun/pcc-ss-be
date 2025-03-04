@@ -2,6 +2,7 @@ package org.promisepeople.ss.fthchck.dto;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.promisepeople.ss.fthchck.domain.*;
 import org.promisepeople.ss.fthchck.domain.convert.BooleanToYNConverter;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class SmallGroupDTO {
 	/*
 	 * 소그룹_코드

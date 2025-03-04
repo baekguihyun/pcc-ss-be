@@ -19,7 +19,12 @@ public class MemberAuthDetail extends User {
 	/**
 	 * 회원_아이디
 	 */
-	private String mbrId;
+	private Long mbrId;
+
+	/**
+	 * 비밀번호
+	 */
+	private String pswd;
 
 	/**
 	 * 성명
@@ -92,7 +97,8 @@ public class MemberAuthDetail extends User {
 		super(username, password,
 			Arrays.asList(new SimpleGrantedAuthority("ROLE_" + memberRole.name())));
 
-		this.mbrType = mbrType;
+		this.pswd = password;
+		this.mbrType = memberRole.getMbrType();
 		this.roleNames = Arrays.asList(memberRole.name());
 	}
 
@@ -101,7 +107,7 @@ public class MemberAuthDetail extends User {
 
 		dataMap.put("mbrId", this.mbrId);
 		dataMap.put("username", getUsername());
-		dataMap.put("password", getPassword());
+		dataMap.put("password", this.pswd);
 		dataMap.put("flnm", this.flnm);
 		dataMap.put("gndr", this.gndr);
 		dataMap.put("telno", this.telno);
@@ -127,7 +133,7 @@ public class MemberAuthDetail extends User {
 			return;
 		}
 
-		this.mbrId = Long.toString(member.getMbrId());
+		this.mbrId = member.getMbrId();
 		this.flnm = member.getFlnm();
 		this.gndr = member.getGndr();
 		this.telno = member.getTelno();
@@ -145,7 +151,7 @@ public class MemberAuthDetail extends User {
 			return;
 		}
 
-		this.mbrId = dto.getMbrId();
+		this.mbrId = Long.parseLong(dto.getMbrId());
 		this.flnm = dto.getFlnm();
 		this.gndr = dto.getGndr();
 		this.telno = dto.getTelno();

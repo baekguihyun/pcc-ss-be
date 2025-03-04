@@ -1,6 +1,9 @@
 package org.promisepeople.ss.security.filter;
 
 import com.google.gson.Gson;
+import org.promisepeople.ss.exception.ApiException;
+import org.promisepeople.ss.exception.ApiStatusEnum;
+import org.promisepeople.ss.fthchck.dto.resp.ApiExceptionEntity;
 import org.promisepeople.ss.fthchck.security.MemberAuthDetail;
 import org.promisepeople.ss.fthchck.security.MemberRole;
 import org.promisepeople.ss.util.JWTUtil;
@@ -61,12 +64,13 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
 			log.info("JWT claims: " + claims);
 
-//			filterChain.doFilter(request, response);
 			String username = (String) claims.get("username");
 			String password = (String) claims.get("password");
 
 			MemberAuthDetail memberAuthDTO = new MemberAuthDetail(
 				username, password, MemberRole.valueOfType((String) claims.get("mbrType")));
+
+			memberAuthDTO.setMbrId((Long) claims.get("mbrId"));
 
 			log.info("--------------------------------");
 			log.info(memberAuthDTO);
@@ -81,10 +85,16 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 		}
 		catch (Exception e) {
 			log.error("JWT Check Error..........");
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 
 			Gson gson = new Gson();
-			String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
+			String msg = gson.toJson(ApiExceptionEntity
+				.builder()
+					.code(ApiStatusEnum.FAILED_CHECK_JWT.getCode())
+					.message(ApiStatusEnum.FAILED_CHECK_JWT.getMessage())
+					.messageEng(ApiStatusEnum.FAILED_CHECK_JWT.getMessageEng())
+					.detailMsg(e.getMessage())
+				.build());
 
 			response.setContentType("application/json");
 

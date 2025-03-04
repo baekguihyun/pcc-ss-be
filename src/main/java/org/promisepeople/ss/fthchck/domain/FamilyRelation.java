@@ -6,12 +6,10 @@ import lombok.*;
 /**
  * 가족_관계
  */
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Builder
-@ToString
+@Entity
 @Table(name = "TBL_FAM_REL",
 	indexes = {
 		@Index(name = "UNIQ_MBR_ID", columnList = "MBR_ID"),

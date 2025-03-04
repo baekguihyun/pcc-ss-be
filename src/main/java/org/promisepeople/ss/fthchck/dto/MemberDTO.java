@@ -1,6 +1,7 @@
 package org.promisepeople.ss.fthchck.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.promisepeople.ss.fthchck.domain.*;
@@ -9,6 +10,7 @@ import org.promisepeople.ss.fthchck.security.MemberRole;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class MemberDTO {
 
 	/**

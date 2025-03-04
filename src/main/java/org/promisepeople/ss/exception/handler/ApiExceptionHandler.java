@@ -2,6 +2,7 @@ package org.promisepeople.ss.exception.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.promisepeople.ss.exception.ApiException;
 import org.promisepeople.ss.fthchck.dto.resp.ApiExceptionEntity;
@@ -36,6 +37,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice(annotations = Controller.class)
+@Log4j2
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	
@@ -50,7 +52,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	{
 		String resultType = request.getParameter("resultType");
 		boolean jsonType = StringUtils.equalsIgnoreCase(resultType, "xml") ? false : true;
-		
+
+		log.error(e.getMessage(), e);
+
 		return ResponseEntity
 				.status(ApiStatusEnum.SERVER_UNKNOWN_ERROR.getStatus())
 				.header(HttpHeaders.CONTENT_TYPE, jsonType ? MediaType.APPLICATION_JSON_VALUE : MediaType.APPLICATION_XML_VALUE)
@@ -74,7 +78,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	{
 		String resultType = request.getParameter("resultType");
 		boolean jsonType = StringUtils.equalsIgnoreCase(resultType, "xml") ? false : true;
-		
+
+		log.error(e.getMessage(), e);
+
 		return ResponseEntity
 				.status(e.getError().getStatus())
 				.header(HttpHeaders.CONTENT_TYPE, jsonType ? MediaType.APPLICATION_JSON_VALUE : MediaType.APPLICATION_XML_VALUE)
@@ -93,6 +99,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		WebRequest request) {
 		String resultType = request.getParameter("resultType");
 		boolean jsonType = StringUtils.equalsIgnoreCase(resultType, "xml") ? false : true;
+
+		log.error(ex.getMessage(), ex);
 
 		return ResponseEntity
 			.status(ApiStatusEnum.NO_MANDATORY_REQUEST_PARAMETER_ERROR.getStatus())
@@ -116,7 +124,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	{
 		String resultType = request.getParameter("resultType");
 		boolean jsonType = StringUtils.equalsIgnoreCase(resultType, "xml") ? false : true;
-	
+
+		log.error(e.getMessage(), e);
+
 		return ResponseEntity
 				.status(ApiStatusEnum.SERVER_UNKNOWN_ERROR.getStatus())
 				.header(HttpHeaders.CONTENT_TYPE, jsonType ? MediaType.APPLICATION_JSON_VALUE : MediaType.APPLICATION_XML_VALUE)

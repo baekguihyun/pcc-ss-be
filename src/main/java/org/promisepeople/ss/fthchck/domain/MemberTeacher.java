@@ -9,11 +9,10 @@ import java.util.List;
 /**
  * 회원_교사
  */
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
+@Setter
 @ToString
+@Entity
 @Table(name = "TBL_MBR_TCHR")
 @PrimaryKeyJoinColumn(name = "TCHR_ID")
 public class MemberTeacher extends Member {

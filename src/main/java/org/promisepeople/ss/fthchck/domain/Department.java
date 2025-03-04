@@ -6,12 +6,10 @@ import lombok.*;
 /**
  * 부서 (주일학교)
  */
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Builder
-@ToString
+@Entity
 @Table(name = "TBL_DEPT")
 public class Department {
 
