@@ -43,7 +43,7 @@ public class JWTUtil {
 			claim = Jwts.parser()
 						.verifyWith(key).build()
 						.parseSignedClaims(token)
-						.getBody();
+						.getPayload();
 		}
 		catch (MalformedJwtException e) {
 			throw new CustomJWTException("MalFormed");

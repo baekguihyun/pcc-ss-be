@@ -2,12 +2,27 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'maven-publish'
 }
 
 group = 'org.promisepeople.ss'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 targetCompatibility = '17'
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+	repositories {
+		maven {
+			def mavenRepoLocal = project.findProperty("maven.repo.local")
+			url = uri(mavenRepoLocal ?: "${System.env.HOME}/.m2/repository")
+		}
+	}
+}
 
 java {
 	toolchain {
@@ -22,6 +37,7 @@ configurations {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 }
 
@@ -50,6 +66,8 @@ dependencies {
 
 	implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}"
 
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
 	// JWT
 	implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 	runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
@@ -65,8 +83,66 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok:'
+
+	configurations {
+		all {
+			exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+			exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+		}
+	}
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+ext.profile = project.hasProperty('profile') ?  project.property('profile') : 'local'
+
+println "Current profile: ${profile}"
+
+sourceSets {
+	main {
+		resources {
+			srcDirs "src/main/resources", "src/main/resources-env/${profile}"
+		}
+	}
+}
+
+tasks {
+	processResources {
+		duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
+	}
+}
+
+bootJar {
+	archiveFileName = "${project.name}.jar"  // project.name과 project.version을 사용
+}
+
+task printMavenRepoLocal {
+	doLast {
+		println "Maven Local Repository: " + project.findProperty("maven.repo.local")
+	}
+}
+
+// 의존성을 로컬 Maven에 설치하는 태스크
+task installDependenciesToMavenLocal {
+	dependsOn configurations.runtimeClasspath
+	doLast {
+		configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+			def file = artifact.file
+			def groupId = artifact.moduleVersion.id.group
+			def artifactId = artifact.moduleVersion.id.name
+			def version = artifact.moduleVersion.id.version
+			println "Installing ${groupId}:${artifactId}:${version} to Maven local repository"
+			exec {
+				commandLine 'mvn.cmd', 'install:install-file',
+						"-Dfile=${file}",
+						"-DgroupId=${groupId}",
+						"-DartifactId=${artifactId}",
+						"-Dversion=${version}",
+						"-Dpackaging=jar",
+						"-DgeneratePom=true"
+			}
+		}
+	}
 }

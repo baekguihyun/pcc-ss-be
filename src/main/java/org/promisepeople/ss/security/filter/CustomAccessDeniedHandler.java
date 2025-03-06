@@ -34,6 +34,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 		response.setStatus(ApiStatusEnum.UNAUTHORIZED.getStatus().value());
 		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
 
 		PrintWriter printWriter = response.getWriter();
 		printWriter.println(msg);

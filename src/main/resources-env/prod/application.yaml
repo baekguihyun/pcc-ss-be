@@ -20,6 +20,8 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: 'true'
+  profiles:
+    active: prod
 
 mybatis:
   mapper-locations:
@@ -35,8 +37,3 @@ logging:
       springframework:
         security:
           web: trace
-
-#org:
-#  promisepeoples:
-#    fthchck:
-#      path: upload

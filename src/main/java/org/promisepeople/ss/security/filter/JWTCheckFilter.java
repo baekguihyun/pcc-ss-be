@@ -1,6 +1,8 @@
 package org.promisepeople.ss.security.filter;
 
 import com.google.gson.Gson;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.promisepeople.ss.exception.ApiException;
 import org.promisepeople.ss.exception.ApiStatusEnum;
 import org.promisepeople.ss.fthchck.dto.resp.ApiExceptionEntity;
@@ -13,8 +15,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.promisepeople.ss.util.MemberUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -36,13 +41,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
 		log.info("check url.........." + path);
 
-		/* /api/auth/ 경로의 호출은 체크하지 않음 */
-		if (path.startsWith("/api/auth/")) {
-			return true;
-		}
 
-		/* 이미지 조회 경로는 체크하지 않는다면 */
-		if (path.startsWith("/api/products/view/")) {
+		/* ${basePath}/api/auth/ 경로의 호출은 체크하지 않음 */
+		if (path.startsWith("/api/auth/")) {
 			return true;
 		}
 
@@ -97,6 +98,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 				.build());
 
 			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 
 			PrintWriter printWriter = response.getWriter();
 			printWriter.println(msg);
