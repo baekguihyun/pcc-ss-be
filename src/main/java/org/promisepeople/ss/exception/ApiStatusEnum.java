@@ -64,7 +64,7 @@ public enum ApiStatusEnum {
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "8","권한 없음", "UNAUTHORIZED"),
 
 	/**
-	 * 권한 없음 (CODE 9)
+	 * JWT 검사 실패 (CODE 9)
 	 */
 	FAILED_CHECK_JWT(HttpStatus.OK, "9","JWT 검사 실패", "FAILED_CHECK_JWT"),
 

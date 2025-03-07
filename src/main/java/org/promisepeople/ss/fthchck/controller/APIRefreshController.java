@@ -1,5 +1,8 @@
 package org.promisepeople.ss.fthchck.controller;
 
+import org.apache.commons.lang3.StringUtils;
+import org.promisepeople.ss.exception.ApiException;
+import org.promisepeople.ss.exception.ApiStatusEnum;
 import org.promisepeople.ss.util.CustomJWTException;
 import org.promisepeople.ss.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +22,9 @@ public class APIRefreshController {
 	public Map<String, Object> refresh(
 		@RequestHeader("Authorization") String authHeader, @RequestParam String refreshToken) {
 
-		if (refreshToken == null) {
-			throw new CustomJWTException("NULL_REFRESH");
-		}
-
-		if (authHeader == null || authHeader.length() < 7) {
-			throw new CustomJWTException("INVALID_STRING");
+		if (StringUtils.isBlank(refreshToken) ||
+			(StringUtils.isBlank(authHeader) || authHeader.length() < 7)) {
+			throw new ApiException(ApiStatusEnum.INVALID_REQUEST_PARAMETER_ERROR);
 		}
 
 		String accessToken = authHeader.substring(7);
@@ -32,7 +32,14 @@ public class APIRefreshController {
 		// Access 토큰이 만료되었다면
 		if (checkExpiredToken(accessToken)) {
 			// Refresh 토큰 검증
-			Map<String, Object> claims = JWTUtil.validateToken(refreshToken);
+			Map<String, Object> claims;
+
+			try {
+				claims = JWTUtil.validateToken(refreshToken);
+			}
+			catch (CustomJWTException e) {
+				throw new ApiException(ApiStatusEnum.UNAUTHORIZED);
+			}
 
 			log.info("refresh ... claims: " + claims);
 

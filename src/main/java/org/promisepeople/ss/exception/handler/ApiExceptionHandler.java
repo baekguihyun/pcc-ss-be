@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.promisepeople.ss.exception.ApiException;
 import org.promisepeople.ss.fthchck.dto.resp.ApiExceptionEntity;
 import org.promisepeople.ss.exception.ApiStatusEnum;
+import org.promisepeople.ss.util.CustomJWTException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.*;
@@ -112,7 +113,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.messageEng(ApiStatusEnum.NO_MANDATORY_REQUEST_PARAMETER_ERROR.getMessageEng())
 				.build());
 	}
-	
+
+	@ExceptionHandler({CustomJWTException.class})
+	public ResponseEntity<ApiExceptionEntity> exceptionHandler(
+		HttpServletRequest request,
+		final CustomJWTException e) {
+
+		String resultType = request.getParameter("resultType");
+		boolean jsonType = StringUtils.equalsIgnoreCase(resultType, "xml") ? false : true;
+
+		log.error(e.getMessage(), e);
+
+		ApiStatusEnum apiStatusEnum = ApiStatusEnum.UNAUTHORIZED;
+
+		return ResponseEntity
+			.status(apiStatusEnum.getStatus())
+			.header(HttpHeaders.CONTENT_TYPE, jsonType ? MediaType.APPLICATION_JSON_VALUE : MediaType.APPLICATION_XML_VALUE)
+			.body(ApiExceptionEntity
+				.builder()
+				.code(apiStatusEnum.getCode())
+				.message(apiStatusEnum.getMessage())
+				.messageEng(apiStatusEnum.getMessageEng())
+				.build());
+	}
+
+
+
 	/**
 	 * 기타 예외처리. 로그 확인 후 조치 필요
 	 * **/
