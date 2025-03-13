@@ -22,8 +22,11 @@ public class APIRefreshController {
 	public Map<String, Object> refresh(
 		@RequestHeader("Authorization") String authHeader, @RequestParam String refreshToken) {
 
-		if (StringUtils.isBlank(refreshToken) ||
-			(StringUtils.isBlank(authHeader) || authHeader.length() < 7)) {
+		if (StringUtils.isBlank(refreshToken) || StringUtils.isBlank(authHeader)) {
+			throw new ApiException(ApiStatusEnum.NO_MANDATORY_REQUEST_PARAMETER_ERROR);
+		}
+
+		if (authHeader.length() < 7) {
 			throw new ApiException(ApiStatusEnum.INVALID_REQUEST_PARAMETER_ERROR);
 		}
 
